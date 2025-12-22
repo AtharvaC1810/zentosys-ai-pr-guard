@@ -1,0 +1,51 @@
+name: Zentosys AI PR Guard
+
+# Trigger on PR events
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  ai-pr-guard:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the PR code
+      - name: Checkout PR code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Step 2: Set up Node.js environment
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      # Step 3: Install dependencies
+      - name: Install Dependencies
+        run: npm install
+
+      # Step 4: Build Docker container (optional for running inside Docker)
+      - name: Build PR Guard Container
+        run: docker build -t zentosys-ai-pr-guard .
+
+      # Step 5: Run Code Quality Checks directly (inside Node environment)
+      - name: Run Code Quality Checks
+        run: npm run quality:check
+
+      # Optional: Run inside Docker (if you want to mirror prod environment)
+      - name: Run PR Guard in Docker
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}:/app \
+            -w /app \
+            zentosys-ai-pr-guard
+
+      #audit
+      - name: Run PR Guard in Docker
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}:/app \
+            -w /app \
+            zentosys-ai-pr-guard

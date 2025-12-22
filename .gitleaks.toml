@@ -1,0 +1,5 @@
+title = "Zentosys AI PR Guard Gitleaks Config"
+[[rules]]
+description = "AWS Access Key"
+regex = "(?i)AKIA[0-9A-Z]{16}"
+tags = ["key", "aws"]
