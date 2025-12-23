@@ -1,6 +1,5 @@
 name: Zentosys AI PR Guard
 
-# Trigger on PR events
 on:
   pull_request:
     types: [opened, synchronize, reopened]
@@ -10,42 +9,35 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the PR code
+      # ---------------------------------------
+      # 1️⃣ Checkout full git history (needed for diff)
+      # ---------------------------------------
       - name: Checkout PR code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      # Step 2: Set up Node.js environment
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
+      # ---------------------------------------
+      # 2️⃣ Set up Docker
+      # ---------------------------------------
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v3
 
-      # Step 3: Install dependencies
-      - name: Install Dependencies
-        run: npm install
-
-      # Step 4: Build Docker container (optional for running inside Docker)
+      # ---------------------------------------
+      # 3️⃣ Build PR Guard Docker Image
+      # ---------------------------------------
       - name: Build PR Guard Container
         run: docker build -t zentosys-ai-pr-guard .
 
-      # Step 5: Run Code Quality Checks directly (inside Node environment)
-      - name: Run Code Quality Checks
-        run: npm run quality:check
-
-      # Optional: Run inside Docker (if you want to mirror prod environment)
-      - name: Run PR Guard in Docker
+      # ---------------------------------------
+      # 4️⃣ Run PR Guard (ALL CHECKS INSIDE DOCKER)
+      # ---------------------------------------
+      - name: Run Zentosys AI PR Guard
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           docker run --rm \
-            -v ${{ github.workspace }}:/app \
-            -w /app \
-            zentosys-ai-pr-guard
-
-      #audit
-      - name: Run PR Guard in Docker
-        run: |
-          docker run --rm \
+            -e OPENAI_API_KEY=$OPENAI_API_KEY \
             -v ${{ github.workspace }}:/app \
             -w /app \
             zentosys-ai-pr-guard
