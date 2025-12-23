@@ -20,33 +20,27 @@ RUN apk add --no-cache \
 # Ensure pipx binaries are available
 ENV PATH="/root/.local/bin:${PATH}"
 
-# =============================
-# Install Semgrep (SAST)
-# =============================
+# Install latest Semgrep (2.x)
 RUN pipx install semgrep
+
+
 
 # =============================
 # Install Gitleaks (Secrets Scan)
 # =============================
-RUN curl -Lo /usr/local/bin/gitleaks \
-    https://github.com/zricethezav/gitleaks/releases/download/v8.20.0/gitleaks_8.20.0_linux_x86_64 && \
-    chmod +x /usr/local/bin/gitleaks
+RUN curl -sSL \
+    https://github.com/zricethezav/gitleaks/releases/download/v8.20.0/gitleaks_8.20.0_linux_x64.tar.gz \
+    -o /tmp/gitleaks.tar.gz && \
+    tar -xzf /tmp/gitleaks.tar.gz -C /tmp && \
+    mv /tmp/gitleaks /usr/local/bin/gitleaks && \
+    chmod +x /usr/local/bin/gitleaks && \
+    rm -rf /tmp/gitleaks*
 
 # =============================
 # Node Dependencies
 # =============================
 COPY package*.json ./
-
-RUN npm install
-
-RUN npm install --save-dev \
-    eslint \
-    prettier \
-    typescript \
-    @typescript-eslint/parser \
-    @typescript-eslint/eslint-plugin \
-    ts-node \
-    axios
+RUN npm ci
 
 # =============================
 # Copy Source Code
@@ -54,9 +48,8 @@ RUN npm install --save-dev \
 COPY . .
 
 # =============================
-# Environment Variables
+# Environment Variables (CI Injected)
 # =============================
-# OpenAI / Gemini key passed from CI
 ENV AI_PROVIDER=openai
 ENV AI_MODEL=gpt-4o-mini
 
@@ -74,8 +67,18 @@ CMD sh -c "\
     gitleaks detect --source . --exit-code 1 && \
     \
     echo '🛡️ Running SAST (Semgrep)...' && \
-    semgrep --config p/owasp-nodejs,p/owasp-typescript --error && \
+    semgrep scan \
+    --config p/javascript \
+    --config p/typescript \
+    --config p/security-audit \
+    --config p/nodejs \
+    --error && \
     \
     echo '🤖 Running AI PR Review...' && \
     npm run ai:review \
 "
+
+
+
+
+

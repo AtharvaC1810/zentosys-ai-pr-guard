@@ -1,4 +1,4 @@
-export type AIRiskLevel = "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+export type AIRiskLevel = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
 
 export interface AIReviewResult {
   risk_level: AIRiskLevel;

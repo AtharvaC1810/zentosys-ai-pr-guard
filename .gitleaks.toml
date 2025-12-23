@@ -1,5 +1,23 @@
-title = "Zentosys AI PR Guard Gitleaks Config"
+title = "Zentosys Gitleaks Config"
+
+[allowlist]
+paths = [
+  '''node_modules/''',
+  '''dist/''',
+  '''build/''',
+  '''package-lock.json''',
+  '''yarn.lock''',
+  '''pnpm-lock.yaml'''
+]
+
 [[rules]]
+id = "aws-access-key"
 description = "AWS Access Key"
-regex = "(?i)AKIA[0-9A-Z]{16}"
-tags = ["key", "aws"]
+regex = '''AKIA[0-9A-Z]{16}'''
+tags = ["key", "AWS"]
+
+[[rules]]
+id = "generic-api-key"
+description = "Generic API Key"
+regex = '''(?i)(api|token|secret|key)[^a-zA-Z0-9]{0,5}[a-zA-Z0-9]{16,}'''
+tags = ["key"]

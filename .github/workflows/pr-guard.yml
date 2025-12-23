@@ -4,9 +4,15 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
+permissions:
+  contents: read
+  pull-requests: read
+
 jobs:
   ai-pr-guard:
+    name: AI Security & Quality Gate
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       # ---------------------------------------
@@ -18,7 +24,7 @@ jobs:
           fetch-depth: 0
 
       # ---------------------------------------
-      # 2️⃣ Set up Docker
+      # 2️⃣ Set up Docker (Buildx)
       # ---------------------------------------
       - name: Set up Docker
         uses: docker/setup-buildx-action@v3
@@ -26,18 +32,19 @@ jobs:
       # ---------------------------------------
       # 3️⃣ Build PR Guard Docker Image
       # ---------------------------------------
-      - name: Build PR Guard Container
-        run: docker build -t zentosys-ai-pr-guard .
+      - name: Build PR Guard Image
+        run: |
+          docker build \
+            --no-cache \
+            -t zentosys-ai-pr-guard .
 
       # ---------------------------------------
-      # 4️⃣ Run PR Guard (ALL CHECKS INSIDE DOCKER)
+      # 4️⃣ Run Zentosys AI PR Guard
       # ---------------------------------------
-      - name: Run Zentosys AI PR Guard
+      - name: Run AI PR Guard
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           docker run --rm \
-            -e OPENAI_API_KEY=$OPENAI_API_KEY \
-            -v ${{ github.workspace }}:/app \
-            -w /app \
+            -e OPENAI_API_KEY \
             zentosys-ai-pr-guard
