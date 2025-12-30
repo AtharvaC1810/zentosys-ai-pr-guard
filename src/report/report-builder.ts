@@ -1,9 +1,5 @@
 import * as fs from 'fs';
 
-/* =============================
-   Types
-============================= */
-
 export type Status = 'pass' | 'fail';
 export type AIRiskLevel = 'LOW' | 'MEDIUM' | 'HIGH' | 'UNKNOWN';
 
@@ -16,9 +12,7 @@ export interface CodeQualityReport {
 export interface SecurityReport {
   dependencies: Status;
   secrets: Status;
-  sast: {
-    findings: number;
-  };
+  sast: { findings: number };
 }
 
 export interface AIReviewReport {
@@ -33,66 +27,40 @@ export interface Report {
   final_status: 'PASS' | 'FAIL';
 }
 
-/* =============================
-   Internal State
-============================= */
-
 const report: Report = {
-  code_quality: {
-    lint: 'pass',
-    format: 'pass',
-    typecheck: 'pass',
-  },
-  security: {
-    dependencies: 'pass',
-    secrets: 'pass',
-    sast: {
-      findings: 0,
-    },
-  },
-  ai_review: {
-    summary: 'Skipped',
-    risk_level: 'UNKNOWN',
-  },
+  code_quality: { lint: 'pass', format: 'pass', typecheck: 'pass' },
+  security: { dependencies: 'pass', secrets: 'pass', sast: { findings: 0 } },
+  ai_review: { summary: 'Skipped', risk_level: 'UNKNOWN' },
   final_status: 'PASS',
 };
 
-/* =============================
-   Mutators (STRICT SAFE)
-============================= */
-
-export function setLintStatus(value: Status): void {
+export function setLintStatus(value: Status) {
   report.code_quality.lint = value;
 }
 
-export function setFormatStatus(value: Status): void {
+export function setFormatStatus(value: Status) {
   report.code_quality.format = value;
 }
 
-export function setTypecheckStatus(value: Status): void {
+export function setTypecheckStatus(value: Status) {
   report.code_quality.typecheck = value;
 }
 
-export function setDependencyStatus(value: Status): void {
+export function setDependencyStatus(value: Status) {
   report.security.dependencies = value;
 }
 
-export function setSecretsStatus(value: Status): void {
+export function setSecretsStatus(value: Status) {
   report.security.secrets = value;
 }
 
-export function setSastFindings(count: number): void {
+export function setSastFindings(count: number) {
   report.security.sast.findings = count;
 }
 
-export function setAIReview(summary: string, riskLevel: AIRiskLevel): void {
-  report.ai_review.summary = summary;
-  report.ai_review.risk_level = riskLevel;
+export function setAIReview(summary: string, riskLevel: AIRiskLevel) {
+  report.ai_review = { summary, risk_level: riskLevel };
 }
-
-/* =============================
-   Finalization
-============================= */
 
 export function finalizeReport(): void {
   const failed =
@@ -110,6 +78,6 @@ export function finalizeReport(): void {
   fs.writeFileSync('reports/pr-guard-report.json', JSON.stringify(report, null, 2));
 }
 
-export function getReport(): Report {
+export function getReport() {
   return report;
 }

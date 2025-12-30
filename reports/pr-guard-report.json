@@ -1,0 +1,19 @@
+{
+  "code_quality": {
+    "lint": "pass",
+    "format": "pass",
+    "typecheck": "pass"
+  },
+  "security": {
+    "dependencies": "pass",
+    "secrets": "pass",
+    "sast": {
+      "findings": 0
+    }
+  },
+  "ai_review": {
+    "summary": "Skipped",
+    "risk_level": "UNKNOWN"
+  },
+  "final_status": "PASS"
+}

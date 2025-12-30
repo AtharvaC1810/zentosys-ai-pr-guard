@@ -15,10 +15,10 @@
     "ai:review": "ts-node ai/ai-review.ts",
     "policy:check": "ts-node scripts/enforce-policy.ts",
     "report:generate": "ts-node scripts/generate-report.ts",
-    "guard": "TS_NODE_TRANSPILE_ONLY=true ts-node scripts/enforce-policy.ts",
+    "guard": "docker run --rm --env-file .env -v $(pwd):/app -v $(pwd)/reports:/app/reports -w /app zentosys-ai-pr-guard",
     "format:fix": "prettier --write ."
   },
-   "ts-node": {
+  "ts-node": {
     "transpileOnly": true,
     "files": false
   },
@@ -38,6 +38,7 @@
     "typescript-eslint": "^8.50.1"
   },
   "dependencies": {
+    "dotenv": "^17.2.3",
     "js-yaml": "^4.1.1",
     "openai": "^6.15.0"
   }
