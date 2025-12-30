@@ -1,0 +1,27 @@
+{
+  "metadata": {
+    "repo": "owner/repo",
+    "pr": 12,
+    "commit": "abc123",
+    "timestamp": "2025-12-23T12:30:00Z"
+  },
+  "code_quality": {
+    "lint": "pass",
+    "format": "pass",
+    "typecheck": "pass"
+  },
+  "security": {
+    "dependencies": "pass",
+    "secrets": "pass",
+    "sast": {
+      "findings": 0,
+      "rules_run": 91
+    }
+  },
+  "ai_review": {
+    "summary": "No major issues found",
+    "risk_level": "LOW",
+    "recommendations": []
+  },
+  "final_status": "PASS"
+}

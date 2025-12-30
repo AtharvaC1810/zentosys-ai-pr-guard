@@ -9,23 +9,36 @@
     "typecheck": "tsc --noEmit",
     "quality:check": "npm run lint && npm run format:check && npm run typecheck",
     "audit:check": "npm audit --audit-level=high",
+    "sast": "semgrep scan --config p/javascript --config p/typescript --config p/security-audit --config p/nodejs --error",
+    "report:finalize": "node dist/report/finalize.js",
+    "report:md": "node dist/report/report-to-md.js",
     "ai:review": "ts-node ai/ai-review.ts",
-    "sast": "semgrep scan --config p/javascript --config p/typescript --config p/security-audit --config p/nodejs --error"
+    "policy:check": "ts-node scripts/enforce-policy.ts",
+    "report:generate": "ts-node scripts/generate-report.ts",
+    "guard": "TS_NODE_TRANSPILE_ONLY=true ts-node scripts/enforce-policy.ts",
+    "format:fix": "prettier --write ."
+  },
+   "ts-node": {
+    "transpileOnly": true,
+    "files": false
   },
   "engines": {
     "node": ">=18"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^25.0.3",
     "@typescript-eslint/eslint-plugin": "^8.50.0",
     "@typescript-eslint/parser": "^8.50.0",
     "eslint": "^9.39.2",
     "prettier": "^3.7.4",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.50.1"
   },
   "dependencies": {
+    "js-yaml": "^4.1.1",
     "openai": "^6.15.0"
   }
 }

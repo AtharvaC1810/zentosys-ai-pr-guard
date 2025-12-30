@@ -1,0 +1,23 @@
+policy:
+  block_on:
+    code_quality:
+      lint: true
+      format: true
+      typecheck: true
+
+    security:
+      dependency_vulnerabilities:
+        critical: true
+        high: true
+        medium: false
+        low: false
+
+      secrets: true
+      sast:
+        max_findings: 0
+
+    ai_review:
+      risk_levels:
+        block: ['HIGH']
+        warn: ['MEDIUM']
+        allow: ['LOW', 'UNKNOWN']

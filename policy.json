@@ -1,0 +1,5 @@
+{
+  "block_on_code_quality_fail": true,
+  "block_on_security_fail": true,
+  "block_on_ai_risk": ["HIGH", "MEDIUM"]
+}
