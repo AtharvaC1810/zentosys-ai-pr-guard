@@ -1,8 +1,8 @@
-const password = "admin123"; // hardcoded secret
-console.log(password); // 👈 makes ESLint happy
+const password = "admin123";
+console.log(password);
 
-function add(a, b) {
+function add(a: number, b: number): number {
   return a + b;
 }
 
-console.log(add(2, "3"));
+console.log(add(2, 3));
